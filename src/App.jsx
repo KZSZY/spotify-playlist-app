@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import TrackList from "./components/TrackList";
+import Track from './components/Track';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [searchResults, setSerchResults] = useState([
+    { id: 1, name: 'Track One', artist: 'Artist A', album: 'Album X' },
+    { id: 2, name: 'Track Two', artist: 'Artist B', album: 'Album Y' },
+    { id: 3, name: 'Track Three', artist: 'Artist C', album: 'Album Z' }
+  ]);
+
+  const [playlistTracks, setPlaylistTracks] = useState([]);
+
+  const addTrack = (track) => {
+    if (playlistTracks.find((t) => t.id === track.id)) return;
+    setPlaylistTracks([...playlistTracks,track]);
+  };
+
+  const removeTrack = (track) => {
+    setPlaylistTracks(playlistTracks.filter((t) => t.id !== track.id));
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h1>Playlist App</h1>
+
+      <h2>Search Results</h2>
+      <TrackList
+        tracks={searchResults}
+        onAdd={addTrack}
+        isRemoval={false}
+      />
+
+      <h2>My Playlist</h2>
+      <TrackList 
+        tracks={playlistTracks}
+        onRemove={removeTrack}
+        isRemoval={true}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;
